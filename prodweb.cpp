@@ -77,7 +77,15 @@ bool HttpPrepare(int v)
     http.put_AllowGzip(false);
     success = http.AddQuickHeader("Content-type","application/json");
 
-     
+    /* The Get method - simply returns the identity */
+	char buf[1024];
+    sprintf(buf,"http://alansw550/a2427/api/values/%d",v);
+    const char *html = 0;
+    html = http.quickGetStr(buf);
+    printf("Response Body = %s\r\n", html );
+    
+    
+    /*  This could be used to bond a request to a person 
 	CkHttpResponse *resp = http.PostJson("http://alansw550/a2427/api/values",json.emit() ); 
     if (resp == 0 ) {
         printf("%s\r\n", http.lastErrorText() );
@@ -87,6 +95,7 @@ bool HttpPrepare(int v)
         //  Display the JSON response.
         printf("Response Body = %s\r\n", resp->bodyStr() );
         delete resp;
-    }
+    }*/
+    
     return true;
 }
