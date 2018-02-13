@@ -30,7 +30,7 @@ void* web_out_handler(void *nfc_context) {
 
     cp_t* temp = (cp_t *)nfc_context;
     pthread_barrier_wait(&temp->bar);
-    for(; ;) { 
+    while(temp->quitflag == false) { 
 
         //acquire the lock
         pthread_mutex_lock(&temp->lock);
@@ -64,10 +64,10 @@ bool HttpPrepare(int v)
     CkHttp http;
     CkJsonObject json;
 
-    bool success = json.AddIntAt(-1,"RFDidTag",v);
+    bool success = json.AddIntAt(-1,"nRfid",v);
     if(success)
     {
-     success = json.AddStringAt(-1,"RFDidSectorData","FrontDoor");
+     success = json.AddStringAt(-1,"RfidLocation","FrontDoor");
      json.put_EmitCompact(true);
     }
 
@@ -77,16 +77,11 @@ bool HttpPrepare(int v)
     http.put_AllowGzip(false);
     success = http.AddQuickHeader("Content-type","application/json");
 
-    /* The Get method - simply returns the identity */
-	char buf[1024];
-    sprintf(buf,"http://alansw550/a2427/api/values/%d",v);
-    const char *html = 0;
-    html = http.quickGetStr(buf);
-    printf("Response Body = %s\r\n", html );
+#ifdef _DEBUG
+    printf("%s\n", json.emit() );
+#endif
     
-    
-    /*  This could be used to bond a request to a person 
-	CkHttpResponse *resp = http.PostJson("http://alansw550/a2427/api/values",json.emit() ); 
+    CkHttpResponse *resp = http.PostJson("http://alansw550/aweb2427/home/rfid",json.emit() ); 
     if (resp == 0 ) {
         printf("%s\r\n", http.lastErrorText() );
         return false;
@@ -95,7 +90,7 @@ bool HttpPrepare(int v)
         //  Display the JSON response.
         printf("Response Body = %s\r\n", resp->bodyStr() );
         delete resp;
-    }*/
+    }
     
     return true;
 }

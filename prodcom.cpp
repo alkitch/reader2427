@@ -16,6 +16,7 @@ void initialise(cp_t *cp, int size) {
 
     cp->occupied = cp->nextin = cp->nextout = cp->uids_in = cp->uids_out = 0;
     cp->capacity = size;
+    cp->quitflag = false;
 
     cp->nfcuid = (int *)malloc(cp->capacity * sizeof(*cp->nfcuid));
 

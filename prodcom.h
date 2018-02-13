@@ -22,6 +22,7 @@ typedef struct {
   
   nfc_device *pnd;
   nfc_context *context;
+  volatile bool quitflag;
 } cp_t;
 
 

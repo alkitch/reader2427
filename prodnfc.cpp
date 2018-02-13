@@ -42,6 +42,12 @@ void toggleLEDS(bool on)
 	}
 }
 
+void offLEDS()
+{
+		digitalWrite(0, LOW);
+		digitalWrite(1, LOW);
+}
+
 
 bool nfc_init(void *nfc_context)
 {
@@ -94,7 +100,7 @@ void* nfc_in_handler(void *nfc_context)
     
 
     pthread_barrier_wait(&temp->bar);
-    while(1) { 
+    while(temp->quitflag == false) { 
 
         //usleep(rand_r(&seed) % ONE_SECOND);
         int res = nfc_initiator_poll_target(temp->pnd, nmModulations, szModulations, uiPollNr, uiPeriod, &nt);
@@ -133,6 +139,7 @@ void* nfc_in_handler(void *nfc_context)
         }
 
     }
+    offLEDS();
     nfc_exit(nfc_context);
     return ((void *)NULL);
 
